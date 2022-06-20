@@ -1,0 +1,24 @@
+#WEB Configuration
+spring:
+  profiles:
+    active: local
+#    active: dev
+#    active: prod
+custom:
+  version: 1.1.1
+server:
+  port: 8888
+  servlet:
+    context-path: /
+  tomcat:
+    uri-encoding: UTF-8
+    max-http-form-post-size: 8096
+jodconverter:
+  local:
+    enabled: true
+    max-tasks-per-process: 10
+    port-numbers: 9100
+    #home:安装地址
+    office-home: D:\\Program Files (x86)\\OpenOffice 4
+#    working-dir: /opt/openoffice4/workingdir
+

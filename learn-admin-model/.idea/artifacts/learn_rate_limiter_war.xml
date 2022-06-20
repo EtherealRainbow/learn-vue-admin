@@ -1,0 +1,16 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="learn-rate-limiter:war">
+    <output-path>$PROJECT_DIR$/learn-rate-limiter/target</output-path>
+    <properties id="maven-jee-properties">
+      <options>
+        <exploded>false</exploded>
+        <module>learn-rate-limiter</module>
+        <packaging>war</packaging>
+        <unpackNestedArchives>false</unpackNestedArchives>
+      </options>
+    </properties>
+    <root id="archive" name="learn-rate-limiter-0.0.1-SNAPSHOT.war">
+      <element id="artifact" artifact-name="learn-rate-limiter:war exploded" />
+    </root>
+  </artifact>
+</component>

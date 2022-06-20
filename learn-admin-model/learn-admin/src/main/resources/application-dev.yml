@@ -1,0 +1,103 @@
+# 端口配置
+spring:
+  redis:
+    database: 1
+    host: 192.168.1.204
+    port: 9763
+    password: sckj_2021
+    jedis:
+      pool:
+        max-active: 8
+        max-wait: -1
+        max-idle: 500
+        min-idle: 0
+    lettuce:
+      shutdown-timeout: 0
+  mvc:
+    static-path-pattern: /static/**
+    format:
+      date: yyyy-MM-dd
+      date-time: yyyy-MM-dd HH:mm:ss
+  devtools:
+    restart:
+      enabled: true
+  thymeleaf:
+    cache: false #关闭缓存
+    mode: HTML
+    encoding: UTF-8
+    servlet:
+      content-type: text/html
+    check-template-location: true
+    prefix: classpath:/templates/
+    suffix: .html
+  application:
+    name: spring-boot-thymleaf
+  datasource:
+    dynamic:
+      #设置默认的数据源或者数据源组,默认值即为master，
+      #如果读者只是单数据源只需要注释掉slave相关配置即可，这里为了方便演示master与slave保持相同
+      primary: master
+      datasource:
+        master:
+          url: jdbc:mysql://192.168.1.202:3307/sjtbxt?useUnicode=true&characterEncoding=utf8&useSSL=false
+          username: sjtbxt
+          password: sjtbxt_420223
+          driverClassName: com.mysql.cj.jdbc.Driver
+#        slave:
+#          url: jdbc:mysql://localhost:3306/zbzsdb?serverTimezone=Hongkong&allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false  # serverTimezone=Hongkong 需要填上时区
+#          username: root
+#          password: root
+#          driverClassName: com.mysql.cj.jdbc.Driver
+      initial-size: 10 # 以下是连接池配置
+      max-active: 100
+      min-idle: 10
+      max-wait: 60000
+      pool-prepared-statements: true
+      max-pool-prepared-statement-per-connection-size: 20
+      time-between-eviction-runs-millis: 60000
+      min-evictable-idle-time-millis: 300000
+      #validation-query: SELECT 1
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: false
+      stat-view-servlet:
+        enabled: true
+        url-pattern: /druid/*
+        login-username: druid
+        login-password: 123456
+      filter:
+        stat:
+          log-slow-sql: true
+          slow-sql-millis: 1000
+          merge-sql: false
+        wall:
+          config:
+            multi-statement-allow: true
+servlet:
+  multipart:
+    enabled: true
+    # 单个文件最大值
+    max-file-size: 200MB
+    # 上传文件总的最大值
+    max-request-size: 200MB
+
+# MyBatis
+mybatis-plus:
+  global-config:
+    db-config:
+      table-prefix: t_
+      table-underline: false
+  mapper-locations: classpath*:mapper/*.xml
+  # 实体扫描，多个package用逗号或者分号分隔
+  type-aliases-package: com.learn.vue.dao
+  configuration:
+    # 开启驼峰命名法
+    map-underscore-to-camel-case: false
+    use-generated-keys: true
+    # 这个配置会将执行的sql打印出来，在开发或测试的时候可以用
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+ftp:
+  host: 192.168.1.201
+  port: 21
+  user: sckj
+  password: win2012-password
