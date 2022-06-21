@@ -11,18 +11,91 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Redis工具类
+ * redis工具类(本配置类只有redis消息队列相关命令方法)
  *
  * @author lijun
- * @date 2021/8/3 10:05
+ * @program learn-admin-model
+ * @date 2022/6/21 10:06
  */
+
 @Component
-public class RedisUtil {
+public class RedisClient {
 
     @Resource
     private RedisTemplate<String, Object> redisTemplate;
 
-    // =============================common============================
+    /* ---------------------------------- redis消息队列 ---------------------------------- */
+    /**
+     * 存值
+     * @param key 键
+     * @param value 值
+     * @return
+     */
+    public boolean lpush(String key, Object value) {
+        try {
+            redisTemplate.opsForList().leftPush(key, value);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * 取值 - <rpop：非阻塞式>
+     * @param key 键
+     * @return
+     */
+    public Object rpop(String key) {
+        try {
+            return redisTemplate.opsForList().rightPop(key);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * 取值 - <brpop：阻塞式> - 推荐使用
+     * @param key 键
+     * @param timeout 超时时间
+     * @param timeUnit 给定单元粒度的时间段
+     *                 TimeUnit.DAYS          //天
+     *                 TimeUnit.HOURS         //小时
+     *                 TimeUnit.MINUTES       //分钟
+     *                 TimeUnit.SECONDS       //秒
+     *                 TimeUnit.MILLISECONDS  //毫秒
+     * @return
+     */
+    public Object brpop(String key, long timeout, TimeUnit timeUnit) {
+        try {
+            return redisTemplate.opsForList().rightPop(key, timeout, TimeUnit.SECONDS);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * 查看值
+     * @param key 键
+     * @param start 开始
+     * @param end 结束 0 到 -1代表所有值
+     * @return
+     */
+    public List<Object> lrange(String key, long start, long end) {
+        try {
+            return redisTemplate.opsForList().range(key, start, end);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /** ---------------------------------- redis消息队列 ---------------------------------- */
+
+
+// =============================common============================
     /**
      * 指定缓存失效时间
      * @param key 键
@@ -43,7 +116,7 @@ public class RedisUtil {
 
     /**
      * 根据key 获取过期时间
-     * 
+     *
      * @param  key 键 不能为null
      * @return 时间(秒) 返回0代表为永久有效
      * @author lijun
@@ -52,10 +125,10 @@ public class RedisUtil {
     public long getExpire(String key) {
         return redisTemplate.getExpire(key, TimeUnit.SECONDS);
     }
-    
+
     /**
      * 判断key是否存在
-     * 
+     *
      * @param key 键
      * @return true 存在 false不存在
      * @author lijun
@@ -89,7 +162,7 @@ public class RedisUtil {
 
     /**
      * 普通缓存获取
-     * 
+     *
      * @param key 键
      * @return 值
      * @author lijun
@@ -585,5 +658,7 @@ public class RedisUtil {
             return 0;
         }
     }
+
+
 
 }
