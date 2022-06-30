@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableTransactionManagement
 @ServletComponentScan(basePackages = {"com.learn.*"})
 @SpringBootApplication
+//@ComponentScan(basePackages = {"com.learn.*","com.redismq.*"})
 @MapperScan({"com.baomidou.mybatisplus.samples.quickstart.mapper","com.learn.admin.dao"})
 public class LearnAdminApplication extends SpringBootServletInitializer {
 

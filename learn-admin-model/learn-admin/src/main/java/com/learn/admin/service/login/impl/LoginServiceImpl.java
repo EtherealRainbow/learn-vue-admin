@@ -5,20 +5,11 @@ import com.learn.admin.entity.admin.User;
 import com.learn.admin.exception.ServiceException;
 import com.learn.admin.service.admin.IUserService;
 import com.learn.admin.service.login.ILoginService;
-import com.learn.admin.utils.CommonUtils;
-import com.learn.admin.utils.MD5Utils;
-import com.learn.admin.utils.RedisUtil;
-import com.learn.admin.utils.TreeModel;
 import com.learn.jwt.entity.TokenProvider;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * TODO
@@ -33,8 +24,8 @@ public class LoginServiceImpl implements ILoginService {
     @Resource
     private IUserService userService;
 
-    @Resource
-    private RedisUtil redisUtil;
+//    @Resource
+//    private RedisClient redisClient;
 
     @Override
     public User userLogin(Map<String, Object> params) {
@@ -45,7 +36,7 @@ public class LoginServiceImpl implements ILoginService {
             User user = userService.getUserInfo(userName,password);
             if(user.getPassword().equals(password)){
                 String token = TokenProvider.createToken(user.getUuid(), userName, password);
-                redisUtil.set(user.getUsername(),token);
+//                redisClient.set("token",token);
             }
 //            String token = JwtUtils.createToken(userName, md5password);
             return user;

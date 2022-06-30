@@ -49,30 +49,29 @@
         <Row>
           <Col span="24">
             <FormItem label="名称">
-              <Input v-model="menuForm.name"></Input>
+              <Input v-model="menuForm.name"  placeholder="请输入名称"></Input>
             </FormItem>
           </Col>
         </Row>
         <Row>
           <Col span="24">
             <FormItem label="上级菜单">
-<!--              <el-select v-model="selectTree.treeValue" placeholder="请选择">-->
-<!--                <el-option-->
-<!--                    v-for="item in selectTree.treeData"-->
-<!--                    :key="item.value"-->
-<!--                    :label="item.label"-->
-<!--                    :value="item.value">-->
-<!--                  <span style="float: left">{{ item.label }}</span>-->
-<!--                  <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>-->
-<!--                </el-option>-->
-<!--              </el-select>-->
+              <!--              <Treeselect v-model="treeValue" :multiple="false" :options="treeData" />-->
+              <!--              <TreeSelect v-model="treeSelect.treeValue" :data="treeSelect.treeData"  />-->
+              <treeSelect
+                  :close-on-select="selectTree.closeOnSelect"
+                  v-model="selectTree.treeValue"
+                  :options="selectTree.treeData"
+                  @select="getSelect"
+                  placeholder="请选择上级菜单"
+              ></treeSelect>
             </FormItem>
           </Col>
         </Row>
         <Row>
           <Col span="24">
             <FormItem label="路由">
-              <Input v-model="menuForm.url"></Input>
+              <Input v-model="menuForm.url" placeholder="请输入路由"></Input>
             </FormItem>
           </Col>
         </Row>
@@ -86,7 +85,7 @@
         <Row>
           <Col span="24">
             <FormItem label="图标">
-              <Input v-model="menuForm.icon"></Input>
+              <Input v-model="menuForm.icon" placeholder="请输入图标"></Input>
             </FormItem>
           </Col>
         </Row>
@@ -106,84 +105,87 @@
 </template>
 
 <script>
+import treeSelect  from '@riophae/vue-treeselect'
+import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 
 export default {
+  components: {treeSelect },
   name: "menuList",
   data() {
     return {
       columns: [
-          {
-        type: 'index',
-        width: 60,
-        align: 'center'
-      }, {
-        title: '名称',
-        align: 'center',
-        key: 'name'
-      }, {
-        title: '图标',
-        align: 'center',
-        key: 'icon'
-      }, {
-        title: '类型',
-        align: 'center',
-        key: 'type'
-      }, {
-        title: '排序',
-        align: 'center',
-        key: 'sort'
-      }, {
-        title: '路由',
-        align: 'center',
-        key: 'url'
-      }, {
-        title: '授权标识',
-        align: 'center',
-        key: 'permissions'
-      }, {
-        title: '操作',
-        key: 'action',
-        align: 'center',
-        width: 200,
-        fixed: 'right',
-        render: (h, params) => {
-          return h('div', [
-            h(
-                'Button', {
-                  props: {
-                    type: 'primary',
-                    size: 'small',
-                    icon: 'ios-create-outline'
-                  },
-                  style: {
-                    marginRight: '5px'
-                  },
-                  on: {
-                    click: () => {
-                      this.edit(params.row)
+        {
+          type: 'index',
+          width: 60,
+          align: 'center'
+        }, {
+          title: '名称',
+          align: 'center',
+          key: 'name'
+        }, {
+          title: '图标',
+          align: 'center',
+          key: 'icon'
+        }, {
+          title: '类型',
+          align: 'center',
+          key: 'type'
+        }, {
+          title: '排序',
+          align: 'center',
+          key: 'sort'
+        }, {
+          title: '路由',
+          align: 'center',
+          key: 'url'
+        }, {
+          title: '授权标识',
+          align: 'center',
+          key: 'permissions'
+        }, {
+          title: '操作',
+          key: 'action',
+          align: 'center',
+          width: 200,
+          fixed: 'right',
+          render: (h, params) => {
+            return h('div', [
+              h(
+                  'Button', {
+                    props: {
+                      type: 'primary',
+                      size: 'small',
+                      icon: 'ios-create-outline'
+                    },
+                    style: {
+                      marginRight: '5px'
+                    },
+                    on: {
+                      click: () => {
+                        this.edit(params.row)
+                      }
                     }
-                  }
-                },
-                '编辑'
-            ),
-            h(
-                'Button', {
-                  props: {
-                    type: 'error',
-                    size: 'small',
-                    icon: 'md-trash'
                   },
-                  on: {
-                    click: () => {
-                      this.remove(params.row)
+                  '编辑'
+              ),
+              h(
+                  'Button', {
+                    props: {
+                      type: 'error',
+                      size: 'small',
+                      icon: 'md-trash'
+                    },
+                    on: {
+                      click: () => {
+                        this.remove(params.row)
+                      }
                     }
-                  }
-                },
-                '删除'
-            )
-          ])
-        }
-      }],
+                  },
+                  '删除'
+              )
+            ])
+          }
+        }],
       tableData: [],
       page: 0,
       pageSize: 10,
@@ -197,80 +199,64 @@ export default {
         cancelText: '取消',
         title: '菜单表单'
       },
-      menuForm:{
-        type:0,
-        ico:'',
-        url:'',
-        name:'',
-        permissions:'',
-        sort:0,
+      menuForm: {
+        type: 0,
+        ico: '',
+        url: '',
+        name: '',
+        permissions: '',
+        sort: 0,
+        parentId:''
       },
-      selectTree:{
-        expandOnClickNode: true,
-        options:[],
-        defaultProps:{
-          children: 'children',
-          label: 'label'
-        },
-        treeValue:1,
-        treeData: [{
-          value: 'Beijing',
-          label: '北京'
-        }, {
-          value: 'Shanghai',
-          label: '上海'
-        }, {
-          value: 'Nanjing',
-          label: '南京'
-        }, {
-          value: 'Chengdu',
-          label: '成都'
-        }, {
-          value: 'Shenzhen',
-          label: '深圳'
-        }, {
-          value: 'Guangzhou',
-          label: '广州'
-        }]
+      selectTree: {
+        multiple: true,//是否多选
+        clearable: true,//是否显示重置值的“×”按钮。
+        searchable: true,//设置 true为允许选择多个选项（又名多重选择模式）。
+        disabled: false,//	是否启用搜索功能。
+        openOnClick: true,//单击控件时是否自动打开菜单。
+        openOnFocus: false,//控件集中时是否自动打开菜单。
+        clearOnSelect: true,//选择选项后是否关闭菜单。仅在时使用 :multiple="true".
+        alwaysOpen: false,//菜单是否应始终打开。
+        appendToBody: false,//将菜单追加到 <body />
+        treeValue:null,
+        treeData: [],
       },
       selectIndex: 0,
       modalType: "add"
     }
   },
   created() {
-
+    this.loadData();
   },
   methods: {
-    // 四级菜单
-    formatData(data){
-      let options = [];
-      data.forEach((item,key) => {
-        options.push({label:item.label,value:item.id});
-        if(item.children){
-          item.children.forEach((items,keys) => {
-            options.push({label:items.label,value:items.id});
-            if(items.children){
-              items.children.forEach((itemss,keyss) => {
-                options.push({label:itemss.label,value:itemss.id});
-                if(itemss.children){
-                  itemss.children.forEach((itemsss,keysss) => {
-                    options.push({label:itemsss.label,value:itemsss.id});
-                  });
-                }
-              });
-            }
-          });
-        }
-      });
-      return options;
-    },
-    //树点击事件
-    handleNodeClick(data) {
-      console.log(data);
-    },
     //加载数据
     loadData() {
-
+      //测试数据
+      let data = [
+        {
+          id: 'a',
+          label: 'a',
+          children: [{
+            id: 'aa',
+            label: 'aa',
+          }, {
+            id: 'ab',
+            label: 'ab',
+          }],
+        }, {
+          id: 'b',
+          label: 'b',
+        }, {
+          id: 'c',
+          label: 'c',
+        }
+      ]
+      this.selectTree.treeData = data;
+    },
+    getSelect(node, instanceId){
+      this.menuForm.parentId = node.id
+      console.dir(node);
+      console.dir(instanceId);
     },
     //查询
     select() {
@@ -283,15 +269,26 @@ export default {
     //新增
     add(flag) {
       //打开或者关闭窗口
-      // this.resetForm();
+      this.resetForm();
       this.modalType = "add";
       this.modalConfig_table.window_udpTable = flag;
       // this.select();
     },
-    ok(){
+    resetForm(){
+      this.menuForm={
+        type: 0,
+        ico: '',
+        url: '',
+        name: '',
+        permissions: '',
+        sort: 0,
+        parentId:''
+      };
+    },
+    ok() {
 
     },
-    cancel(){
+    cancel() {
       this.add(false);
     },
     pageChange(page) {
@@ -312,6 +309,14 @@ export default {
   margin-left: 0px !important;
   text-align: center;
 }
-.main-select-el-tree .el-tree-node .is-current > .el-tree-node__content{font-weight: bold; color: #409eff;}
-.main-select-el-tree .el-tree-node.is-current > .el-tree-node__content{font-weight: bold; color: #409eff;}
+
+.main-select-el-tree .el-tree-node .is-current > .el-tree-node__content {
+  font-weight: bold;
+  color: #409eff;
+}
+
+.main-select-el-tree .el-tree-node.is-current > .el-tree-node__content {
+  font-weight: bold;
+  color: #409eff;
+}
 </style>

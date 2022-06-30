@@ -23,6 +23,7 @@
 	import {
 		mapActions
 	} from 'vuex'
+  import {getUserInfoByToken} from "@/api/user";
 	export default {
     data(){
       return{
@@ -34,8 +35,7 @@
 		},
 		methods: {
 			...mapActions([
-				'handleLogin',
-				'getUserInfoByToken`'
+				'handleLogin'
 			]),
 			handleSubmit({
 				userName,
@@ -47,7 +47,7 @@
 					password
 				}).then(res => {
           if(res.data.success){
-            this.getUserInfoByToken({token}).then(res => {
+            getUserInfoByToken({token}).then(res => {
               this.$router.push({
                 name: this.$config.homeName
               })

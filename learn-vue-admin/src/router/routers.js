@@ -122,7 +122,15 @@ export default [{
 			title: '权限管理'
 		},
 		component: Main,
-		children: [{
+		children: [ {
+			path: 'departList',
+			name: '部门列表',
+			meta: {
+				title: '部门列表',
+				icon: 'md-people'
+			},
+			component: () => import('@/view/auth/departList.vue')
+		}, {
 			path: 'menuList',
 			name: '菜单列表',
 			meta: {

@@ -7,11 +7,11 @@
     "build": "vue-cli-service build"
   },
   "dependencies": {
+    "@riophae/vue-treeselect": "^0.4.0",
     "axios": "^0.18.1",
     "core-js": "^2.6.12",
     "countup": "^1.8.2",
     "echarts": "^4.0.4",
-    "element-ui": "^2.15.9",
     "iview": "^3.5.4",
     "iview-area": "^1.6.0",
     "js-cookie": "^2.2.1",

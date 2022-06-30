@@ -2,7 +2,6 @@ package com.learn.admin.common.config;
 
 
 import com.baomidou.mybatisplus.annotation.DbType;
-import com.baomidou.mybatisplus.autoconfigure.ConfigurationCustomizer;
 import com.baomidou.mybatisplus.core.config.GlobalConfig;
 import com.baomidou.mybatisplus.core.incrementer.IKeyGenerator;
 import com.baomidou.mybatisplus.core.injector.DefaultSqlInjector;
@@ -34,11 +33,6 @@ public class MybatisPlusConfig {
         return interceptor;
     }
 
-
-    @Bean
-    public ConfigurationCustomizer configurationCustomizer() {
-        return configuration -> configuration.setUseGeneratedShortKey(false);
-    }
 
     /**
      * 主键策略相关
